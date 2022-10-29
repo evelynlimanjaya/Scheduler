@@ -18,6 +18,11 @@
                   <Font size="18.0" />
                </font>
             </Button>
+            <Button fx:id="summary_btn" mnemonicParsing="false" onAction="#on_summary_btn" text="Appointments Summary Report">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
             <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                <children>
                   <Button fx:id="log_out_btn" mnemonicParsing="false" onAction="#on_log_out_btn" text="Log Out">

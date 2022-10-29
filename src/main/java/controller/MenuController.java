@@ -1,17 +1,25 @@
 package controller;
 
+import DAO.AppointmentDAOImpl;
 import DAO.DBConnection;
+import DAO.UserDaoImpl;
 import com.elimanjaya.scheduler.SchedulerMain;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
@@ -19,6 +27,7 @@ public class MenuController implements Initializable {
     public Button appointments_btn;
     public Button log_out_btn;
     public Button exit_btn;
+    public Button summary_btn;
 
     public void on_customers_btn(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("customer_record.fxml"));
@@ -56,5 +65,14 @@ public class MenuController implements Initializable {
         DBConnection.closeConnection();
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    public void on_summary_btn(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("appt_summary_report.fxml"));
+        Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load(), 800, 500);
+        stage.setTitle("Appointment Summary Form");
+        stage.setScene(scene);
+        stage.show();
     }
 }

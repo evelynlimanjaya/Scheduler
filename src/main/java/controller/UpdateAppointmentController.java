@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Contact;
 import model.Customer;
-import model.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,28 +25,32 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
-public class AddAppointmentController implements Initializable {
+public class UpdateAppointmentController implements Initializable {
+    private static Appointment retrievedAppt = null;
     public TextField title;
     public TextField description;
     public TextField location;
     public TextField type;
-    public Button add_btn;
+    public Button update_btn;
     public Button back_btn;
     public Label id_label;
     public ComboBox customer_opt;
     public ComboBox contact_opt;
+    public DatePicker date;
     public ComboBox start_time;
     public ComboBox end_time;
-    public DatePicker date;
     public ComboBox type_opt;
+
+    public static void passData(Appointment a) {
+        retrievedAppt = a;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        try {
-            id_label.setText(Integer.toString(AppointmentDAOImpl.getLargestID() + 1));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        id_label.setText(Integer.toString(retrievedAppt.getAppointmentID()));
+        title.setText(retrievedAppt.getTitle());
+        description.setText(retrievedAppt.getDescription());
+        location.setText(retrievedAppt.getLocation());
 
         type_opt.getItems().add("Planning Session");
         type_opt.getItems().add("De-Briefing");
@@ -56,10 +59,10 @@ public class AddAppointmentController implements Initializable {
         type_opt.getItems().add("Design");
 
         LocalDate ESTDate = LocalDate.now(ZoneId.of("America/New_York"));
-        LocalTime ESTStartTime = LocalTime.of(8,00);
-        LocalTime ESTEndTime = LocalTime.of(22,00);
+        LocalTime ESTStartTime = LocalTime.of(8, 00);
+        LocalTime ESTEndTime = LocalTime.of(22, 00);
         ZonedDateTime ESTStartZdt = ZonedDateTime.of(ESTDate, ESTStartTime, ZoneId.of("America/New_York"));
-        ZonedDateTime ESTEndZdt = ZonedDateTime.of(ESTDate,ESTEndTime, ZoneId.of("America/New_York"));
+        ZonedDateTime ESTEndZdt = ZonedDateTime.of(ESTDate, ESTEndTime, ZoneId.of("America/New_York"));
         ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
 
         ZonedDateTime localStartZdt = ESTStartZdt.withZoneSameInstant(localZoneId);
@@ -68,14 +71,14 @@ public class AddAppointmentController implements Initializable {
         LocalTime localStartTime = localStartZdt.toLocalTime();
         LocalTime localEndTime = localEndZdt.toLocalTime();
 
-        while (localStartTime.isBefore(localEndTime.minusHours(1))){
+        while (localStartTime.isBefore(localEndTime.minusHours(1))) {
             start_time.getItems().add(localStartTime);
             localStartTime = localStartTime.plusMinutes(10);
         }
 
         localStartTime = localStartZdt.toLocalTime();
 
-        while (localStartTime.isBefore(localEndTime.plusMinutes(10))){
+        while (localStartTime.isBefore(localEndTime.plusMinutes(10))) {
             end_time.getItems().add(localStartTime);
             localStartTime = localStartTime.plusMinutes(10);
         }
@@ -89,9 +92,22 @@ public class AddAppointmentController implements Initializable {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        type_opt.setValue(retrievedAppt.getType());
+        date.setValue(retrievedAppt.getStartDateTime().toLocalDate());
+        start_time.setValue(retrievedAppt.getStartDateTime().toLocalTime());
+        end_time.setValue(retrievedAppt.getEndDateTime().toLocalTime());
+
+        try {
+            customer_opt.setValue(CustomerDAOImpl.getCustomerByID(retrievedAppt.getCustomerID()));
+            contact_opt.setValue(ContactDAOImpl.getContactByID(retrievedAppt.getContactID()));
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+
     }
 
-    public void on_add_btn(ActionEvent actionEvent) throws Exception {
+    public void on_update_btn(ActionEvent actionEvent) throws SQLException, IOException {
         try {
             int appID = Integer.parseInt(id_label.getText());
             String titleInput = title.getText();
@@ -101,8 +117,6 @@ public class AddAppointmentController implements Initializable {
             LocalDate dateInput = date.getValue();
             LocalTime startTimeInput = (LocalTime) start_time.getSelectionModel().getSelectedItem();
             LocalTime endTimeInput = (LocalTime) end_time.getSelectionModel().getSelectedItem();
-            LocalDateTime createDate = LocalDateTime.now();
-            String createdBy = LoginController.userNameInput;
             LocalDateTime lastUpdate = LocalDateTime.now();
             String lastUpdatedBy = LoginController.userNameInput;
             Customer custIDInput = (Customer) customer_opt.getSelectionModel().getSelectedItem();
@@ -114,25 +128,20 @@ public class AddAppointmentController implements Initializable {
             ObservableList<Appointment> appointments = AppointmentDAOImpl.getAllAppointmentsByCustID(custID);
             ArrayList timeCheckResult = new ArrayList(appointments.size());
 
-            for(Appointment a: appointments){
+            for (Appointment a : appointments) {
                 LocalTime dbStartTime = a.getStartDateTime().toLocalTime();
                 LocalTime dbEndTime = a.getEndDateTime().toLocalTime();
 
-                if(a.getStartDateTime().toLocalDate().equals(dateInput) && checkOverlap(dbStartTime, dbEndTime, startTimeInput, endTimeInput)){
+                if(a.getAppointmentID() == appID){
+                    timeCheckResult.add(false);
+                } else if (a.getStartDateTime().toLocalDate().equals(dateInput) && AddAppointmentController.checkOverlap(dbStartTime, dbEndTime, startTimeInput, endTimeInput)) {
                     timeCheckResult.add(true);
                 } else {
                     timeCheckResult.add(false);
                 }
             }
 
-            if(titleInput.isBlank() || descInput.isBlank() || locInput.isBlank()){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Invalid Input");
-                alert.setContentText("Please fill all fields.");
-                alert.showAndWait();
-            }
-
-            if(timeCheckResult.contains(true)) {
+            if (timeCheckResult.contains(true)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Time Overlap");
                 alert.setContentText("Appointment time overlaps with previously made appointment.");
@@ -142,35 +151,33 @@ public class AddAppointmentController implements Initializable {
                 alert.setTitle("Time error");
                 alert.setContentText("Please schedule an appointment that starts at least 30 minutes from now.");
                 alert.showAndWait();
-            } else if(endTimeInput.equals(startTimeInput) || endTimeInput.isBefore(startTimeInput)){
+            } else if (endTimeInput.equals(startTimeInput) || endTimeInput.isBefore(startTimeInput)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Time error");
                 alert.setContentText("Meeting end time has to be set after start time.");
                 alert.showAndWait();
             } else {
-                String sql = "INSERT INTO client_schedule.appointments  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String sql = "UPDATE client_schedule.appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
                 PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
 
-                ps.setInt(1, appID);
-                ps.setString(2, titleInput);
-                ps.setString(3, descInput);
-                ps.setString(4, locInput);
-                ps.setString(5, typeInput);
-                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.of(dateInput, startTimeInput)));
-                ps.setTimestamp(7, Timestamp.valueOf(LocalDateTime.of(dateInput, endTimeInput)));
-                ps.setTimestamp(8, Timestamp.valueOf(createDate));
-                ps.setString(9, createdBy);
-                ps.setTimestamp(10, Timestamp.valueOf(lastUpdate));
-                ps.setString(11, lastUpdatedBy);
-                ps.setInt(12, custID);
-                ps.setInt(13, userIDInput);
-                ps.setInt(14, contID);
+                ps.setString(1, titleInput);
+                ps.setString(2, descInput);
+                ps.setString(3, locInput);
+                ps.setString(4, typeInput);
+                ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.of(dateInput, startTimeInput)));
+                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.of(dateInput, endTimeInput)));
+                ps.setTimestamp(7, Timestamp.valueOf(lastUpdate));
+                ps.setString(8, lastUpdatedBy);
+                ps.setInt(9, custID);
+                ps.setInt(10, userIDInput);
+                ps.setInt(11, contID);
+                ps.setInt(12, appID);
 
                 ps.execute();
 
                 FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("appointment_record.fxml"));
-                Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 Scene scene = new Scene(fxmlLoader.load(), 1800, 400);
                 stage.setTitle("Appointment Record");
                 stage.setScene(scene);
@@ -192,26 +199,15 @@ public class AddAppointmentController implements Initializable {
 
 
 
-
-
-    }
-
-    public static boolean checkOverlap(LocalTime aStart, LocalTime aEnd, LocalTime bStart, LocalTime bEnd){
-        if(((bStart.isAfter(aStart) || bStart.equals(aStart)) && bStart.isBefore(aEnd)) ||
-                (bEnd.isAfter(aStart) && ( bEnd.isBefore(aEnd) || bEnd.equals(aEnd))) ||
-                ((bStart.isBefore(aStart) || bStart.equals(aStart)) && (bEnd.isAfter(aEnd) || bEnd.equals(aEnd)))){
-            return true;
-        }
-        return false;
     }
 
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
         Optional<ButtonType> result = alert.showAndWait();
 
-        if(result.isPresent() && result.get() == ButtonType.OK){
+        if (result.isPresent() && result.get() == ButtonType.OK) {
             FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("appointment_record.fxml"));
-            Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), 1800, 400);
             stage.setTitle("Appointment Record");
             stage.setScene(scene);

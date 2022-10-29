@@ -1,20 +1,26 @@
 package controller;
 
+import DAO.AppointmentDAOImpl;
 import DAO.UserDaoImpl;
 import com.elimanjaya.scheduler.SchedulerMain;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.User;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
@@ -67,6 +73,42 @@ public class LoginController implements Initializable {
 
     public void on_login_btn(ActionEvent actionEvent) {
         try{
+            LocalDateTime current = LocalDateTime.now();
+            ObservableList<Appointment> userAppts = null;
+            boolean within15Minutes = false;
+
+            try {
+                userAppts = AppointmentDAOImpl.getAllAppointmentsByUserID(UserDaoImpl.getUserID(LoginController.userNameInput));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            for(Appointment a: userAppts){
+                long timeDifference = ChronoUnit.MINUTES.between(a.getStartDateTime(), current);
+                System.out.println(timeDifference);
+                if(timeDifference >= 0 && timeDifference <= 15){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Appointment");
+                    alert.setContentText("A meeting has started: \n - Appointment ID: " + a.getAppointmentID() + "\n - Date: " + a.getStartDateTime().toLocalDate().toString() + "\n - Start time: " + a.getStartDateTime().toLocalTime().toString() + "\n - End time: " + a.getEndDateTime().toLocalTime().toString());
+                    alert.showAndWait();
+                    within15Minutes = true;
+                } else if (timeDifference < 0 && timeDifference >= -15) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Appointment");
+                    alert.setContentText("A meeting is coming up: \n - Appointment ID: " + a.getAppointmentID() + "\n - Date: " + a.getStartDateTime().toLocalDate().toString() + "\n - Start time: " + a.getStartDateTime().toLocalTime().toString() + "\n - End time: " + a.getEndDateTime().toLocalTime().toString());
+                    alert.showAndWait();
+                    within15Minutes = true;
+                }
+            }
+
+            if(within15Minutes == false){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Appointment");
+                alert.setContentText("No upcoming appointment.");
+                alert.showAndWait();
+            }
+
+
             userNameInput = user_name_input.getText();
             String passwordInput = password_input.getText();
             User user = UserDaoImpl.getUser(userNameInput);
