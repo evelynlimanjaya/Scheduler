@@ -8,8 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * This class implements Data Access Object design model for the countries.
+ */
 public class CountriesDAOImpl {
-    public static ObservableList<Country> getAllCountries() throws SQLException, Exception{
+    /**
+     * This method returns all countries from the database.
+     * @return ObservableList of all countries.
+     * @throws Exception
+     */
+    public static ObservableList<Country> getAllCountries() throws Exception{
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
         DBConnection.getConnection();
         String sqlStatement = "SELECT * from countries";

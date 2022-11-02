@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * This class controls the GUI elements of update_customer.fxml.
+ */
 public class UpdateCustomerController implements Initializable {
     public TextField name;
     public TextField address;
@@ -39,91 +42,11 @@ public class UpdateCustomerController implements Initializable {
 
     private static Customer retrievedCust = null;
 
-    public static void passData (Customer c) {
-        retrievedCust = c;
-    }
-
-    public void on_country(ActionEvent actionEvent) {
-        ObservableList<FirstLevelDivision> divisions = null;
-        Country selectedCountry = (Country) country.getSelectionModel().getSelectedItem();
-        try {
-            divisions = FirstLevelDivDAOImpl.getAllDivisionsByCountryID(selectedCountry.getCountryID());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        first_level_div.setItems(divisions);
-    }
-
-    public void on_first_level_div(ActionEvent actionEvent) {
-    }
-
-    public void on_update_btn(ActionEvent actionEvent) {
-        try {
-            int customerID = Integer.parseInt(id_label.getText());
-            String customerName = name.getText();
-            String addressInput = address.getText();
-            String postalCode = postal_code.getText();
-            String phoneInput = phone.getText();
-            LocalDateTime lastUpdate = LocalDateTime.now();
-            String lastUpdatedBy = LoginController.userNameInput;
-            FirstLevelDivision selectedDivision = (FirstLevelDivision)first_level_div.getSelectionModel().getSelectedItem();
-            int divID = selectedDivision.getDivisionID();
-
-            DBConnection.getConnection();
-            String sql = "UPDATE client_schedule.customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ?, Last_Updated_by = ?, Division_ID = ? WHERE Customer_ID = ?";
-
-            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-
-            ps.setString(1, customerName);
-            ps.setString(2, addressInput);
-            ps.setString(3, postalCode);
-            ps.setString(4, phoneInput);
-            ps.setTimestamp(5, Timestamp.valueOf(lastUpdate));
-            ps.setString(6, lastUpdatedBy);
-            ps.setInt(7, divID);
-            ps.setInt(8, customerID);
-
-            ps.execute();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("customer_record.fxml"));
-            Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 1500, 400);
-            stage.setTitle("Customer Record");
-            stage.setScene(scene);
-            stage.show();
-        } catch (SQLException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setContentText("Please input the correct values:\n - Customer Name : maximum 50 characters\n - Address : maximum 100 characters\n - Postal Code : maximum 50 characters\n - Phone : maximum 50 characters" );
-            alert.showAndWait();
-        } catch (NullPointerException npe){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Input");
-            alert.setContentText("Please input the correct values:\n - Country and First-level Division have to be selected" );
-            alert.showAndWait();
-        } catch (IOException ioe){
-            System.out.println(ioe);
-        }
-
-    }
-
-    public void on_back_btn(ActionEvent actionEvent) throws IOException {
-        Alert alertDelete = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
-        Optional<ButtonType> result = alertDelete.showAndWait();
-
-        if(result.isPresent() && result.get() == ButtonType.OK){
-            FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("customer_record.fxml"));
-            Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 1500, 400);
-            stage.setTitle("Customer Record");
-            stage.setScene(scene);
-            stage.show();
-        }
-    }
-
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -184,4 +107,105 @@ public class UpdateCustomerController implements Initializable {
         }
 
     }
+
+    /**
+     * This method retrieves the customer passed from another class used to get the selected customer from a table view.
+     * @param c Customer object that is passed from another class.
+     */
+    public static void passData (Customer c) {
+        retrievedCust = c;
+    }
+
+    /**
+     * This method populates the first-level division combo box with the divisions of the selected country.
+     * @param actionEvent This is an Event representing some type of action.
+     */
+    public void on_country(ActionEvent actionEvent) {
+        ObservableList<FirstLevelDivision> divisions = null;
+        Country selectedCountry = (Country) country.getSelectionModel().getSelectedItem();
+        try {
+            divisions = FirstLevelDivDAOImpl.getAllDivisionsByCountryID(selectedCountry.getCountryID());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        first_level_div.setItems(divisions);
+    }
+
+    /**
+     * This method updates the customer data in the database when 'Update' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     */
+    public void on_update_btn(ActionEvent actionEvent) {
+        try {
+            int customerID = Integer.parseInt(id_label.getText());
+            String customerName = name.getText();
+            String addressInput = address.getText();
+            String postalCode = postal_code.getText();
+            String phoneInput = phone.getText();
+            LocalDateTime lastUpdate = LocalDateTime.now();
+            String lastUpdatedBy = LoginController.userNameInput;
+            FirstLevelDivision selectedDivision = (FirstLevelDivision)first_level_div.getSelectionModel().getSelectedItem();
+            int divID = selectedDivision.getDivisionID();
+
+            DBConnection.getConnection();
+            String sql = "UPDATE client_schedule.customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ?, Last_Updated_by = ?, Division_ID = ? WHERE Customer_ID = ?";
+
+            PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
+
+            ps.setString(1, customerName);
+            ps.setString(2, addressInput);
+            ps.setString(3, postalCode);
+            ps.setString(4, phoneInput);
+            ps.setTimestamp(5, Timestamp.valueOf(lastUpdate));
+            ps.setString(6, lastUpdatedBy);
+            ps.setInt(7, divID);
+            ps.setInt(8, customerID);
+
+            ps.execute();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("customer_record.fxml"));
+            Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 1500, 400);
+            stage.setTitle("Customer Record");
+            stage.setScene(scene);
+            stage.show();
+        } catch (SQLException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setContentText("Please input the correct values:\n - Customer Name : maximum 50 characters\n - Address : maximum 100 characters\n - Postal Code : maximum 50 characters\n - Phone : maximum 50 characters" );
+            alert.showAndWait();
+        } catch (NullPointerException npe){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Input");
+            alert.setContentText("Please input the correct values:\n - Country and First-level Division have to be selected" );
+            alert.showAndWait();
+        } catch (IOException ioe){
+            System.out.println(ioe);
+        }
+
+    }
+
+    /**
+     * This method takes the user to customer record when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
+    public void on_back_btn(ActionEvent actionEvent) throws IOException {
+        Alert alertDelete = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
+        Optional<ButtonType> result = alertDelete.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK){
+            FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("customer_record.fxml"));
+            Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 1500, 400);
+            stage.setTitle("Customer Record");
+            stage.setScene(scene);
+            stage.show();
+        }
+    }
+
+
 }

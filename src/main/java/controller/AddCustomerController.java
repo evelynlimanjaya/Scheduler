@@ -11,20 +11,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Country;
-import model.Customer;
 import model.FirstLevelDivision;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * This class controls the GUI elements of add_customer.fxml.
+ */
 public class AddCustomerController implements Initializable {
     public TextField name;
     public TextField address;
@@ -37,23 +37,11 @@ public class AddCustomerController implements Initializable {
     public Label id_label;
     ObservableList<Country> countries = null;
 
-    public void on_country(ActionEvent actionEvent) {
-        ObservableList<FirstLevelDivision> divisions = null;
-        Country selectedCountry = (Country) country.getSelectionModel().getSelectedItem();
-        try {
-            divisions = FirstLevelDivDAOImpl.getAllDivisionsByCountryID(selectedCountry.getCountryID());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        first_level_div.setItems(divisions);
-    }
-
-    public void on_first_level_div(ActionEvent actionEvent) {
-    }
-
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -77,6 +65,29 @@ public class AddCustomerController implements Initializable {
 
     }
 
+    /**
+     * This method defines what happens when the user selects an option in country combo box.
+     * @param actionEvent This is an Event representing some type of action.
+     */
+    public void on_country(ActionEvent actionEvent) {
+        ObservableList<FirstLevelDivision> divisions = null;
+        Country selectedCountry = (Country) country.getSelectionModel().getSelectedItem();
+        try {
+            divisions = FirstLevelDivDAOImpl.getAllDivisionsByCountryID(selectedCountry.getCountryID());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        first_level_div.setItems(divisions);
+    }
+
+    /**
+     * This method takes the user to customer record when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         Alert alertDelete = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
         Optional<ButtonType> result = alertDelete.showAndWait();
@@ -92,6 +103,10 @@ public class AddCustomerController implements Initializable {
 
     }
 
+    /**
+     * This method adds a new customer to the database when 'Add' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_add_btn(ActionEvent actionEvent) {
         try {
             int customerID = Integer.parseInt(id_label.getText());

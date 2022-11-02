@@ -7,10 +7,18 @@ import model.Appointment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+/**
+ * This class implements Data Access Object design model for the appointments.
+ */
 public class AppointmentDAOImpl {
+    /**
+     * This method gets all appointments from the database.
+     * @return ObservableList of all the appointments.
+     * @throws SQLException
+     * @throws Exception
+     */
     public static ObservableList<Appointment> getAllAppointments() throws SQLException, Exception{
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -39,6 +47,12 @@ public class AppointmentDAOImpl {
         return allAppointments;
     }
 
+    /**
+     * This method gets all appointments from the current week.
+     * @return ObservableList of all appointments from the current week.
+     * @throws SQLException
+     * @throws Exception
+     */
     public static ObservableList<Appointment> getAllAppointmentsWeek() throws SQLException, Exception{
         ObservableList<Appointment> allAppointmentsWeek = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -67,7 +81,12 @@ public class AppointmentDAOImpl {
         return allAppointmentsWeek;
     }
 
-    public static ObservableList<Appointment> getAllAppointmentsMonth() throws SQLException, Exception{
+    /**
+     * This method gets all appointments from the current month.
+     * @return ObservableList of all appointments from the current month.
+     * @throws Exception
+     */
+    public static ObservableList<Appointment> getAllAppointmentsMonth() throws Exception{
         ObservableList<Appointment> allAppointmentsMonth = FXCollections.observableArrayList();
         DBConnection.getConnection();
         String sqlStatement = "SELECT * from appointments WHERE YEAR(Start) = YEAR(NOW()) AND MONTH(Start) = MONTH(NOW());";
@@ -95,7 +114,12 @@ public class AppointmentDAOImpl {
         return allAppointmentsMonth;
     }
 
-    public static int getLargestID() throws SQLException, Exception{
+    /**
+     * This method gets the largest appointment ID from the database.
+     * @return Integer value of the largest appointment ID.
+     * @throws Exception
+     */
+    public static int getLargestID() throws Exception{
         int largestID = 0;
         DBConnection.getConnection();
         String sqlStatement = "SELECT MAX(Appointment_ID) FROM appointments";
@@ -108,6 +132,12 @@ public class AppointmentDAOImpl {
 
     }
 
+    /**
+     * This method gets all the appointments of a customer ID.
+     * @param id Customer ID to be searched.
+     * @return ObservableList of all the appointments of a customer ID.
+     * @throws SQLException
+     */
     public static ObservableList<Appointment> getAllAppointmentsByCustID(int id) throws SQLException {
         ObservableList<Appointment> allAppointmentsByID = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -136,6 +166,12 @@ public class AppointmentDAOImpl {
         return allAppointmentsByID;
     }
 
+    /**
+     * This method gets all the appointments of a user ID.
+     * @param id User ID to be searched.
+     * @return ObservableList of all the appointments of a user ID.
+     * @throws SQLException
+     */
     public static ObservableList<Appointment> getAllAppointmentsByUserID(int id) throws SQLException {
         ObservableList<Appointment> allAppointmentsByID = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -164,6 +200,12 @@ public class AppointmentDAOImpl {
         return allAppointmentsByID;
     }
 
+    /**
+     * This method gets all the appointments of a contact ID.
+     * @param id Contact ID to be searched.
+     * @return ObservableList of all the appointments of a contact ID.
+     * @throws SQLException
+     */
     public static ObservableList<Appointment> getAllAppointmentsByContactID(int id) throws SQLException {
         ObservableList<Appointment> allAppointmentsByID = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -192,6 +234,13 @@ public class AppointmentDAOImpl {
         return allAppointmentsByID;
     }
 
+    /**
+     * This method gets all the appointments that match the selected month and type.
+     * @param month Month to be searched.
+     * @param typeInput Type to be searched.
+     * @return ObservableList of all the appointments that match.
+     * @throws SQLException
+     */
     public static ObservableList<Appointment> getAllAppointmentsByMonthType(int month, String typeInput) throws SQLException {
         ObservableList<Appointment> allAppointmentsByMonthType = FXCollections.observableArrayList();
         DBConnection.getConnection();
@@ -221,6 +270,12 @@ public class AppointmentDAOImpl {
         return allAppointmentsByMonthType;
     }
 
+    /**
+     * This method gets all the appointments of a location.
+     * @param loc Location to be searched.
+     * @return ObservableList of all the appointments of a location.
+     * @throws SQLException
+     */
     public static ObservableList<Appointment> getAllAppointmentsByLoc(String loc) throws SQLException {
         ObservableList<Appointment> allAppointmentsByLoc = FXCollections.observableArrayList();
         DBConnection.getConnection();

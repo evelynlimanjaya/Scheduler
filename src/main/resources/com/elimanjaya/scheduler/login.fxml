@@ -26,14 +26,14 @@
                     </rowConstraints>
                      <children>
                         <Label fx:id="username_lbl" text="Username" />
-                        <TextField fx:id="user_name_input" onAction="#on_user_name_input" prefHeight="25.0" prefWidth="200.0" promptText="Username" GridPane.columnIndex="1" />
-                        <TextField fx:id="password_input" onAction="#on_password_input" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="user_name_input" prefHeight="25.0" prefWidth="200.0" promptText="Username" GridPane.columnIndex="1" />
+                        <TextField fx:id="password_input" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="password_lbl" text="Password" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
             </HBox>
-            <Label fx:id="error_lbl" text="ERROR" visible="false" />
+            <Label fx:id="error_lbl" text="ERROR" textFill="#e81212" visible="false" />
             <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Label fx:id="timezone" text="Time Zone :" />

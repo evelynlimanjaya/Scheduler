@@ -18,10 +18,12 @@ import model.Customer;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * This class controls the GUI elements of customer_record.fxml.
+ */
 public class CustomerRecordController implements Initializable {
     public TableColumn cust_id;
     public TableColumn cust_name;
@@ -41,11 +43,21 @@ public class CustomerRecordController implements Initializable {
     public Label delete_label;
     ObservableList<Customer> customersList = null;
 
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refreshTable();
     }
 
+    /**
+     * This method takes the user to menu when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("menu.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -55,6 +67,11 @@ public class CustomerRecordController implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method takes the user to the appropriate form to add customer.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_add_btn(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("add_customer.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -64,6 +81,10 @@ public class CustomerRecordController implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method deletes the selected customer from the database.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_delete_btn(ActionEvent actionEvent) {
         Alert alertDelete = new Alert(Alert.AlertType.CONFIRMATION, "This will delete the selected customer. Do you want to proceed?");
         Optional<ButtonType> result = alertDelete.showAndWait();
@@ -79,9 +100,15 @@ public class CustomerRecordController implements Initializable {
             refreshTable();
 
             delete_label.setVisible(true);
+
+            String sqlStatement2 = "DELETE FROM appointments WHERE Customer_ID = " + selectedID;
+            Query.makeQuery(sqlStatement2);
         }
     }
 
+    /**
+     * This method refreshes the table view to display the customers from database.
+     */
     private void refreshTable(){
         try {
             customersList = CustomerDAOImpl.getAllCustomers();
@@ -103,6 +130,11 @@ public class CustomerRecordController implements Initializable {
         division_id.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
     }
 
+    /**
+     * This method takes the user to the appropriate form to update customer.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_update_btn(ActionEvent actionEvent) throws IOException {
         try {
             Customer selected = (Customer) cust_table.getSelectionModel().getSelectedItem();

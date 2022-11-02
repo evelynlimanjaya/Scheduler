@@ -29,8 +29,8 @@
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Label>
-                  <ComboBox fx:id="month_opt" onAction="#on_month_opt" prefHeight="25.0" prefWidth="129.0" promptText="Choose Month" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="type_opt" onAction="#on_type_opt" prefHeight="25.0" prefWidth="130.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="month_opt" prefHeight="25.0" prefWidth="129.0" promptText="Choose Month" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="type_opt" prefHeight="25.0" prefWidth="130.0" promptText="Choose Type" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Summary by Month and Type" GridPane.rowIndex="1" />
                   <Label text="Contact Schedule" GridPane.rowIndex="6" />
                   <ComboBox fx:id="contact_opt" onAction="#on_contact_opt" prefWidth="150.0" promptText="Choose Contact" GridPane.columnIndex="1" GridPane.rowIndex="6" />

@@ -25,6 +25,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
+/**
+ * This class controls the GUI elements of update_appointment.fxml.
+ */
 public class UpdateAppointmentController implements Initializable {
     private static Appointment retrievedAppt = null;
     public TextField title;
@@ -41,10 +44,11 @@ public class UpdateAppointmentController implements Initializable {
     public ComboBox end_time;
     public ComboBox type_opt;
 
-    public static void passData(Appointment a) {
-        retrievedAppt = a;
-    }
-
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         id_label.setText(Integer.toString(retrievedAppt.getAppointmentID()));
@@ -107,7 +111,19 @@ public class UpdateAppointmentController implements Initializable {
 
     }
 
-    public void on_update_btn(ActionEvent actionEvent) throws SQLException, IOException {
+    /**
+     * This method retrieves the appointment passed from another class used to get the selected appointment from a table view.
+     * @param a Appointment object that is passed from another class.
+     */
+    public static void passData(Appointment a) {
+        retrievedAppt = a;
+    }
+
+    /**
+     * This method updates the appointment data in the database when 'Update' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     */
+    public void on_update_btn(ActionEvent actionEvent) {
         try {
             int appID = Integer.parseInt(id_label.getText());
             String titleInput = title.getText();
@@ -196,11 +212,13 @@ public class UpdateAppointmentController implements Initializable {
         } catch (IOException ioe){
             System.out.println(ioe);
         }
-
-
-
     }
 
+    /**
+     * This method takes the user to appointment record when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
         Optional<ButtonType> result = alert.showAndWait();

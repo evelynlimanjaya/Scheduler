@@ -37,7 +37,7 @@
             <TextField fx:id="postal_code" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="phone" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <ComboBox fx:id="country" onAction="#on_country" prefWidth="150.0" promptText="Choose a country" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <ComboBox fx:id="first_level_div" onAction="#on_first_level_div" prefWidth="150.0" promptText="Choose a division" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <ComboBox fx:id="first_level_div" prefWidth="150.0" promptText="Choose a division" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             <Label text="Country" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <Label text="First-Level Division" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="6">

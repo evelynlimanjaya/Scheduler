@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Contact;
 import model.Customer;
-import model.User;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,26 +20,35 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
+/**
+ * This class controls the GUI elements of add_appointment.fxml.
+ */
 public class AddAppointmentController implements Initializable {
     public TextField title;
     public TextField description;
     public TextField location;
-    public TextField type;
     public Button add_btn;
     public Button back_btn;
     public Label id_label;
-    public ComboBox customer_opt;
-    public ComboBox contact_opt;
-    public ComboBox start_time;
-    public ComboBox end_time;
+    public ComboBox<Customer> customer_opt;
+    public ComboBox<Contact> contact_opt;
+    public ComboBox<LocalTime> start_time;
+    public ComboBox<LocalTime> end_time;
     public DatePicker date;
-    public ComboBox type_opt;
+    public ComboBox<String> type_opt;
 
+
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -56,8 +64,8 @@ public class AddAppointmentController implements Initializable {
         type_opt.getItems().add("Design");
 
         LocalDate ESTDate = LocalDate.now(ZoneId.of("America/New_York"));
-        LocalTime ESTStartTime = LocalTime.of(8,00);
-        LocalTime ESTEndTime = LocalTime.of(22,00);
+        LocalTime ESTStartTime = LocalTime.of(8,0);
+        LocalTime ESTEndTime = LocalTime.of(22, 0);
         ZonedDateTime ESTStartZdt = ZonedDateTime.of(ESTDate, ESTStartTime, ZoneId.of("America/New_York"));
         ZonedDateTime ESTEndZdt = ZonedDateTime.of(ESTDate,ESTEndTime, ZoneId.of("America/New_York"));
         ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
@@ -91,28 +99,32 @@ public class AddAppointmentController implements Initializable {
         }
     }
 
-    public void on_add_btn(ActionEvent actionEvent) throws Exception {
+    /**
+     * This method adds a new appointment to the database when 'Add' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     */
+    public void on_add_btn(ActionEvent actionEvent) {
         try {
             int appID = Integer.parseInt(id_label.getText());
             String titleInput = title.getText();
             String descInput = description.getText();
             String locInput = location.getText();
-            String typeInput = type_opt.getSelectionModel().getSelectedItem().toString();
+            String typeInput = type_opt.getSelectionModel().getSelectedItem();
             LocalDate dateInput = date.getValue();
-            LocalTime startTimeInput = (LocalTime) start_time.getSelectionModel().getSelectedItem();
-            LocalTime endTimeInput = (LocalTime) end_time.getSelectionModel().getSelectedItem();
+            LocalTime startTimeInput = start_time.getSelectionModel().getSelectedItem();
+            LocalTime endTimeInput = end_time.getSelectionModel().getSelectedItem();
             LocalDateTime createDate = LocalDateTime.now();
             String createdBy = LoginController.userNameInput;
             LocalDateTime lastUpdate = LocalDateTime.now();
             String lastUpdatedBy = LoginController.userNameInput;
-            Customer custIDInput = (Customer) customer_opt.getSelectionModel().getSelectedItem();
+            Customer custIDInput = customer_opt.getSelectionModel().getSelectedItem();
             int custID = custIDInput.getCustomerID();
             int userIDInput = UserDaoImpl.getUserID(LoginController.userNameInput);
-            Contact contactInput = (Contact) contact_opt.getSelectionModel().getSelectedItem();
+            Contact contactInput = contact_opt.getSelectionModel().getSelectedItem();
             int contID = contactInput.getContactID();
 
             ObservableList<Appointment> appointments = AppointmentDAOImpl.getAllAppointmentsByCustID(custID);
-            ArrayList timeCheckResult = new ArrayList(appointments.size());
+            ArrayList<Boolean> timeCheckResult = new ArrayList<>(appointments.size());
 
             for(Appointment a: appointments){
                 LocalTime dbStartTime = a.getStartDateTime().toLocalTime();
@@ -187,24 +199,29 @@ public class AddAppointmentController implements Initializable {
             alert.setContentText("Please input the correct values:\n - Date, start time, end time, customer, and contact have to be selected" );
             alert.showAndWait();
         } catch (IOException ioe){
-            System.out.println(ioe);
+            ioe.printStackTrace();
         }
-
-
-
-
-
     }
 
+    /**
+     * This method compares two schedules and checks if they are overlapped or not.
+     * @param aStart
+     * @param aEnd
+     * @param bStart
+     * @param bEnd
+     * @return
+     */
     public static boolean checkOverlap(LocalTime aStart, LocalTime aEnd, LocalTime bStart, LocalTime bEnd){
-        if(((bStart.isAfter(aStart) || bStart.equals(aStart)) && bStart.isBefore(aEnd)) ||
-                (bEnd.isAfter(aStart) && ( bEnd.isBefore(aEnd) || bEnd.equals(aEnd))) ||
-                ((bStart.isBefore(aStart) || bStart.equals(aStart)) && (bEnd.isAfter(aEnd) || bEnd.equals(aEnd)))){
-            return true;
-        }
-        return false;
+        return ((bStart.isAfter(aStart) || bStart.equals(aStart)) && bStart.isBefore(aEnd)) ||
+                (bEnd.isAfter(aStart) && (bEnd.isBefore(aEnd) || bEnd.equals(aEnd))) ||
+                ((bStart.isBefore(aStart) || bStart.equals(aStart)) && (bEnd.isAfter(aEnd) || bEnd.equals(aEnd)));
     }
 
+    /**
+     * This method takes user to the appointment record when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You will lose all changes if you go back now. Do you want to proceed?");
         Optional<ButtonType> result = alert.showAndWait();

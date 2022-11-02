@@ -5,11 +5,18 @@ import java.sql.Statement;
 
 import static DAO.DBConnection.connection;
 
+/**
+ * This class is used to make SQL statement and get the result of the SQL statement.
+ */
 public class Query {
     private static String query;
     private static Statement stmt;
     private static ResultSet result;
 
+    /**
+     * This method determine the execution of the SQL statement.
+     * @param q String of the SQL statement.
+     */
     public static void makeQuery(String q){
         query =q;
         try{
@@ -25,6 +32,11 @@ public class Query {
             System.out.println("Error: "+ex.getMessage());
         }
     }
+
+    /**
+     * This method gets the result of the SQL statement.
+     * @return Result of SQL statement.
+     */
     public static ResultSet getResult(){
         return result;
     }

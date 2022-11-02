@@ -6,7 +6,17 @@ import model.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class implements Data Access Object design model for the users.
+ */
 public class UserDaoImpl {
+    /**
+     * This method gets a user that matches the username.
+     * @param userName Username to be searched.
+     * @return User that matches the username.
+     * @throws SQLException
+     * @throws Exception
+     */
 //    static boolean act;
     public static User getUser(String userName) throws SQLException, Exception {
         DBConnection.getConnection();
@@ -26,6 +36,12 @@ public class UserDaoImpl {
         return userResult;
     }
 
+    /**
+     * This method get the user ID that matches the username.
+     * @param userName Username to be searched.
+     * @return User ID that matches the username.
+     * @throws SQLException
+     */
     public static int getUserID(String userName) throws SQLException {
         DBConnection.getConnection();
         String sqlStatement = "SELECT * FROM users WHERE User_Name ='" + userName + "'";

@@ -23,6 +23,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * This class controls the GUI elements of appointment_record.fxml.
+ */
 public class AppointmentRecordController implements Initializable {
     public Button back_btn;
     public Button add_btn;
@@ -50,11 +53,21 @@ public class AppointmentRecordController implements Initializable {
     public TableView app_table;
     public Label delete_label;
 
+    /**
+     * This method is used to initialize the controller.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refreshTable();
     }
 
+    /**
+     * This method takes the user to menu when 'Go Back' button is clicked.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_back_btn(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("menu.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -64,6 +77,11 @@ public class AppointmentRecordController implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method takes the user to the appropriate form to add appointment.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_add_btn(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("add_appointment.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -73,6 +91,11 @@ public class AppointmentRecordController implements Initializable {
         stage.show();
     }
 
+    /**
+     * This method takes the user to the appropriate form to update appointment.
+     * @param actionEvent This is an Event representing some type of action.
+     * @throws IOException
+     */
     public void on_update_btn(ActionEvent actionEvent) throws IOException {
         try {
             Appointment selected = (Appointment) app_table.getSelectionModel().getSelectedItem();
@@ -93,6 +116,10 @@ public class AppointmentRecordController implements Initializable {
 
     }
 
+    /**
+     * This method deletes the selected appointment from the database.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_delete_btn(ActionEvent actionEvent) {
 
         Alert alertDelete = new Alert(Alert.AlertType.CONFIRMATION, "This will delete the selected customer. Do you want to proceed?");
@@ -114,18 +141,33 @@ public class AppointmentRecordController implements Initializable {
 
     }
 
+    /**
+     * This method shows all appointments in table view.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_all_btn(ActionEvent actionEvent) {
         refreshTable();
     }
 
+    /**
+     * This method shows this week's appointments in table view.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_week_btn(ActionEvent actionEvent) {
         refreshTableByWeek();
     }
 
+    /**
+     * This method shows this month's appointments in table view.
+     * @param actionEvent This is an Event representing some type of action.
+     */
     public void on_month_btn(ActionEvent actionEvent) {
         refreshTableByMonth();
     }
 
+    /**
+     * This method refreshes the table view to display all appointments.
+     */
     private void refreshTable(){
         try {
             appointmentsList = AppointmentDAOImpl.getAllAppointments();
@@ -151,6 +193,9 @@ public class AppointmentRecordController implements Initializable {
         contact_id.setCellValueFactory(new PropertyValueFactory<>("contactID"));
     }
 
+    /**
+     * This method refreshes the table view to display this week's appointments.
+     */
     private void refreshTableByWeek(){
         try {
             appointmentsList = AppointmentDAOImpl.getAllAppointmentsWeek();
@@ -176,6 +221,9 @@ public class AppointmentRecordController implements Initializable {
         contact_id.setCellValueFactory(new PropertyValueFactory<>("contactID"));
     }
 
+    /**
+     * This method refreshes the table view to display this month's appointments.
+     */
     private void refreshTableByMonth(){
         try {
             appointmentsList = AppointmentDAOImpl.getAllAppointmentsMonth();

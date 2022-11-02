@@ -8,8 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+/**
+ * This class implements Data Access Object design model for the customers.
+ */
 public class CustomerDAOImpl {
-    public static ObservableList<Customer> getAllCustomers() throws SQLException, Exception{
+    /**
+     * This method gets all customers from the database.
+     * @return ObservableList of all customers.
+     * @throws Exception
+     */
+    public static ObservableList<Customer> getAllCustomers() throws Exception{
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         DBConnection.getConnection();
         String sqlStatement = "SELECT * from customers";
@@ -33,7 +41,12 @@ public class CustomerDAOImpl {
         return allCustomers;
     }
 
-    public static int getLargestID() throws SQLException, Exception{
+    /**
+     * This method gets the largest customer ID.
+     * @return Largest customer ID.
+     * @throws Exception
+     */
+    public static int getLargestID() throws Exception{
         int largestID = 0;
         DBConnection.getConnection();
         String sqlStatement = "SELECT MAX(Customer_ID) FROM customers";
@@ -46,6 +59,12 @@ public class CustomerDAOImpl {
 
     }
 
+    /**
+     * This method gets a customer that matches the customer ID.
+     * @param id Customer ID to be searched.
+     * @return Customer that matches the customer ID.
+     * @throws SQLException
+     */
     public static Customer getCustomerByID(int id) throws SQLException {
         Customer customer = null;
         DBConnection.getConnection();
