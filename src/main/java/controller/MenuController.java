@@ -65,7 +65,7 @@ public class MenuController implements Initializable {
      * @throws IOException
      */
     public void on_appointments_btn(ActionEvent actionEvent) throws IOException {
-        displayScene.goToNewScene("appointment_record.fxml", actionEvent, 1800, 400);
+        displayScene.goToNewScene("appointment_record.fxml", actionEvent, 1000, 400);
     }
 
     /**

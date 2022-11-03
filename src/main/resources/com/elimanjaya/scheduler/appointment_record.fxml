@@ -4,17 +4,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppointmentRecordController">
+<AnchorPane prefHeight="400.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AppointmentRecordController">
     <children>
-        <HBox alignment="CENTER" prefHeight="400.0" prefWidth="1800.0" spacing="20.0">
+        <HBox alignment="CENTER" prefHeight="400.0" prefWidth="1000.0" spacing="20.0">
             <children>
                 <AnchorPane prefHeight="300.0" prefWidth="76.0">
                     <children>
-                        <Button fx:id="back_btn" layoutX="61.0" layoutY="242.0" mnemonicParsing="false" onAction="#on_back_btn" text="Go Back" />
-                        <Button fx:id="add_btn" layoutX="66.0" layoutY="89.0" mnemonicParsing="false" onAction="#on_add_btn" text="Add" />
-                        <Button fx:id="update_btn" layoutX="60.0" layoutY="128.0" mnemonicParsing="false" onAction="#on_update_btn" text="Update" />
-                        <Button fx:id="delete_btn" layoutX="62.0" layoutY="170.0" mnemonicParsing="false" onAction="#on_delete_btn" text="Delete" />
-                  <Label fx:id="delete_label" layoutX="24.0" layoutY="208.0" text="Appointment was deleted." textFill="#da1818" visible="false" />
+                        <Button fx:id="back_btn" layoutX="58.0" layoutY="284.0" mnemonicParsing="false" onAction="#on_back_btn" text="Go Back" />
+                        <Button fx:id="add_btn" layoutX="70.0" layoutY="149.0" mnemonicParsing="false" onAction="#on_add_btn" text="Add" />
+                        <Button fx:id="update_btn" layoutX="61.0" layoutY="188.0" mnemonicParsing="false" onAction="#on_update_btn" text="Update" />
+                        <Button fx:id="delete_btn" layoutX="62.0" layoutY="225.0" mnemonicParsing="false" onAction="#on_delete_btn" text="Delete" />
                     </children>
                 </AnchorPane>
                 <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
@@ -27,27 +26,32 @@
                   <RadioButton fx:id="month_btn" mnemonicParsing="false" onAction="#on_month_btn" text="This Month" toggleGroup="$appGroup" />
                </children>
                 </VBox>
-                <TableView fx:id="app_table" prefHeight="300.0" prefWidth="1400.0">
-                    <columns>
-                        <TableColumn fx:id="app_id" prefWidth="108.0" text="Appointment ID" />
-                        <TableColumn fx:id="title" prefWidth="79.0" text="Title" />
-                        <TableColumn fx:id="description" prefWidth="97.0" text="Description" />
-                        <TableColumn fx:id="location" prefWidth="104.0" text="Location" />
-                        <TableColumn fx:id="type" prefWidth="105.0" text="Type" />
-                        <TableColumn fx:id="start" prefWidth="124.0" text="Start" />
-                        <TableColumn fx:id="end" prefWidth="109.0" text="End" />
-                        <TableColumn fx:id="create_date" prefWidth="114.0" text="Create Date" />
-                        <TableColumn fx:id="created_by" prefWidth="77.0" text="Created By" />
-                        <TableColumn fx:id="last_update" prefWidth="138.0" text="Last Update" />
-                      <TableColumn fx:id="last_updated_by" prefWidth="110.0" text="Last Updated By" />
-                      <TableColumn fx:id="cust_id" prefWidth="88.0" text="Customer ID" />
-                      <TableColumn fx:id="user_id" prefWidth="68.0" text="User ID" />
-                      <TableColumn fx:id="contact_id" prefWidth="78.0" text="Contact ID" />
-                    </columns>
-                </TableView>
-            </children>
-            <padding>
-                <Insets bottom="50.0" top="50.0" />
-            </padding></HBox>
+            <VBox prefHeight="400.0" prefWidth="700.0" spacing="10.0">
+               <children>
+                      <TableView fx:id="app_table" prefHeight="300.0" prefWidth="662.0">
+                          <columns>
+                              <TableColumn fx:id="app_id" prefWidth="108.0" text="Appointment ID" />
+                              <TableColumn fx:id="title" prefWidth="79.0" text="Title" />
+                              <TableColumn fx:id="description" prefWidth="97.0" text="Description" />
+                              <TableColumn fx:id="location" prefWidth="104.0" text="Location" />
+                              <TableColumn fx:id="type" prefWidth="105.0" text="Type" />
+                              <TableColumn fx:id="start" prefWidth="124.0" text="Start" />
+                              <TableColumn fx:id="end" prefWidth="109.0" text="End" />
+                              <TableColumn fx:id="create_date" prefWidth="114.0" text="Create Date" />
+                              <TableColumn fx:id="created_by" prefWidth="77.0" text="Created By" />
+                              <TableColumn fx:id="last_update" prefWidth="138.0" text="Last Update" />
+                            <TableColumn fx:id="last_updated_by" prefWidth="110.0" text="Last Updated By" />
+                            <TableColumn fx:id="cust_id" prefWidth="88.0" text="Customer ID" />
+                            <TableColumn fx:id="user_id" prefWidth="68.0" text="User ID" />
+                            <TableColumn fx:id="contact_id" prefWidth="78.0" text="Contact ID" />
+                          </columns>
+                     <VBox.margin>
+                        <Insets top="50.0" />
+                     </VBox.margin>
+                      </TableView>
+                  <Label fx:id="delete_label" text=" " textFill="#da1818" visible="false" />
+               </children>
+            </VBox>
+            </children></HBox>
     </children>
 </AnchorPane>

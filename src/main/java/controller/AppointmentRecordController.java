@@ -129,16 +129,15 @@ public class AppointmentRecordController implements Initializable {
             Appointment selected = (Appointment) app_table.getSelectionModel().getSelectedItem();
             int selectedID = selected.getAppointmentID();
 
+            delete_label.setText("Appointment with Appointment ID: " + selectedID + " and type: " + selected.getType() + " was canceled.");
+            delete_label.setVisible(true);
+
             DBConnection.getConnection();
             String sqlStatement = "DELETE FROM appointments WHERE Appointment_ID = " + selectedID;
             Query.makeQuery(sqlStatement);
 
             refreshTable();
-
-            delete_label.setVisible(true);
         }
-
-
     }
 
     /**

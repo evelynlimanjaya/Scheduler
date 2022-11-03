@@ -194,7 +194,7 @@ public class UpdateAppointmentController implements Initializable {
 
                 FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("appointment_record.fxml"));
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(fxmlLoader.load(), 1800, 400);
+                Scene scene = new Scene(fxmlLoader.load(), 1000, 400);
                 stage.setTitle("Appointment Record");
                 stage.setScene(scene);
                 stage.show();
@@ -226,7 +226,7 @@ public class UpdateAppointmentController implements Initializable {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             FXMLLoader fxmlLoader = new FXMLLoader(SchedulerMain.class.getResource("appointment_record.fxml"));
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 1800, 400);
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 400);
             stage.setTitle("Appointment Record");
             stage.setScene(scene);
             stage.show();
