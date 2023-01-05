@@ -4,7 +4,7 @@ This is an application for scheduling appointments.
 
 ## Application Info
 Author: Evelyn Limanjaya
-Contact information: eliman2@wgu.edu
+Contact information: evelynlimanjaya@gmail.com
 Application version: 1.0
 Date: 11/2/2022
 
@@ -16,6 +16,9 @@ IntelliJ IDEA 2022.2.3 (Community Edition)
 
 ## JavaFX
 Maven: org.openjfx:javafx-base:17.0.2
+
+## Pattern
+DAO (Data Access Object) pattern was used to build this project.
 
 ## How to use the application
 1. Launch application.
