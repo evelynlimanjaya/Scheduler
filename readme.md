@@ -20,8 +20,8 @@ Maven: org.openjfx:javafx-base:17.0.2
 ## MySQL Connector driver version
 mysql-connector-java-8.0.22.jar
 
-## Pattern
-DAO (Data Access Object) pattern was used to build this project.
+## ArchitecturalPattern
+DAO(Data Access Object) and MVC(Model-View-Controller) pattern was used to build this project.
 
 ## How to use the application
 1. Launch application.
