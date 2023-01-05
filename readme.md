@@ -17,6 +17,9 @@ IntelliJ IDEA 2022.2.3 (Community Edition)
 ## JavaFX
 Maven: org.openjfx:javafx-base:17.0.2
 
+## MySQL Connector driver version
+mysql-connector-java-8.0.22.jar
+
 ## Pattern
 DAO (Data Access Object) pattern was used to build this project.
 
@@ -31,5 +34,3 @@ DAO (Data Access Object) pattern was used to build this project.
 ## Additional reporting
 In Appointments Summary Report section, I added a reporting feature that counts the appointments for a certain location. 
 
-## MySQL Connector driver version
-mysql-connector-java-8.0.22.jar
